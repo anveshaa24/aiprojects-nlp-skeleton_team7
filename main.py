@@ -17,11 +17,11 @@ def main():
     print("Batch size:", constants.BATCH_SIZE)
 
     # Initalize dataset and model. Then train the model!
-    data_path = "train.csv" #TODO: make sure you have train.csv downloaded in your project! this assumes it is in the project's root directory (ie the same directory as main) but you can change this as you please
+    data_path = "aiprojects-nlp-skeleton_team7/train.csv" #TODO: make sure you have train.csv downloaded in your project! this assumes it is in the project's root directory (ie the same directory as main) but you can change this as you please
 
     train_dataset = StartingDataset(data_path)
     val_dataset = StartingDataset(data_path)
-    model = StartingNetwork()
+    model = StartingNetwork(len(train_dataset.token2idx))
     starting_train(
         train_dataset=train_dataset,
         val_dataset=val_dataset,
