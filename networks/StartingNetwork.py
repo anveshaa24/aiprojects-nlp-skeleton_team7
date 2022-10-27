@@ -7,9 +7,15 @@ class StartingNetwork(torch.nn.Module):
     Basic logistic regression example. You may need to double check the dimensions :)
     """
 
-    def __init__(self):
+    def __init__(self, dataset_size):
+        """
+
+        Arguments:
+            dataset_size: The size of the input vector that will be fed to the NN.
+        """
+
         super().__init__()
-        self.fc1 = nn.Linear(12122002, 50) # What could that number mean!?!?!? Ask an officer to find out :)
+        self.fc1 = nn.Linear(dataset_size, 50)
         self.fc2 = nn.Linear(50, 10)
         self.sigmoid = nn.Sigmoid()
 
