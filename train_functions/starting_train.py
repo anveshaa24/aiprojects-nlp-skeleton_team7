@@ -19,6 +19,7 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     # Get keyword arguments
     batch_size, epochs = hyperparameters["batch_size"], hyperparameters["epochs"]
 
+    epochs = 2
     # Initialize dataloaders
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=batch_size, shuffle=True
@@ -31,7 +32,8 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     optimizer = optim.Adam(model.parameters(), lr=.001)
     loss_fn = nn.CrossEntropyLoss()
 
-    criterion = nn.BCEWithLogitsLoss()
+    losses = []
+    total = 0
 
     step = 0
     for epoch in range(epochs):
@@ -40,23 +42,37 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         # Loop over each batch in the dataset
         for batch in tqdm(train_loader):
             # TODO: Forward propagate
+            model.train()
+            inputs, targets = batch
+            model.zero_grad()
+            output = model(inputs)
 
             # TODO: Backpropagation and gradient descent
+            loss = loss_fn(output.squeeze(1).float(), targets.float())
+            loss.backward()
+            optimizer.step()
+            losses.append(loss.item())
+            total += 1
 
+            step = 1
             # Periodically evaluate our model + log to Tensorboard
             if step % n_eval == 0:
                 # TODO:
                 # Compute training loss and accuracy.
+                # Print accuracy
+                print(evaluate(val_loader, model, loss_fn))
+
                 # Log the results to Tensorboard.
 
                 # TODO:
                 # Compute validation loss and accuracy.
                 # Log the results to Tensorboard. 
                 # Don't forget to turn off gradient calculations!
-                evaluate(val_loader, model, loss_fn)
+                # evaluate(val_loader, model, loss_fn)
 
             step += 1
 
+        print(total)
         print()
 
 
@@ -76,11 +92,29 @@ def compute_accuracy(outputs, labels):
     n_total = len(outputs)
     return n_correct / n_total
 
-
+import statistics
 def evaluate(val_loader, model, loss_fn):
     """
     Computes the loss and accuracy of a model on the validation dataset.
 
     TODO!
     """
-    pass
+    model.eval() 
+    with torch.no_grad():
+        accuracies = []
+
+        for batch in val_loader:
+            inputs, labels = batch
+            outputs = model(inputs)
+            
+            acc = compute_accuracy(outputs, labels)
+            accuracies.append(acc)
+    
+        from statistics import mean
+
+        return mean(accuracies)
+            
+        
+
+
+        
