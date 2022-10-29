@@ -28,7 +28,7 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     )
 
     # Initalize optimizer (for gradient descent) and loss function
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.Adam(model.parameters(), weight_decay=0.01) # use L2 regularization to prevent overfitting and simplify model, lambda = 0.01
     loss_fn = nn.CrossEntropyLoss()
 
     train_losses = []
@@ -42,10 +42,14 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         for batch in tqdm(train_loader):
             # TODO: Forward propagate
             inputs, target = batch
+            # print("inputs: " + str(inputs))
+            # print("inputs.shape: " + str(inputs.shape))
+            # print("target: " + str(target))
+            # print("target.shape: " + str(target.shape))
             model.zero_grad()
             output = model(inputs)
             # TODO: Backpropagation and gradient descent
-            loss = loss_fn(output.squeeze(1), target)
+            loss = loss_fn(output.squeeze(1).float(), target.float())
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
@@ -62,7 +66,7 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
                 # Log the results to Tensorboard. 
                 # Don't forget to turn off gradient calculations!
                 evaluate(val_loader, model, loss_fn)
-                print(loss.item())
+                #print(loss.item())
 
             step += 1
         epoch_loss = sum(losses) / total
@@ -82,6 +86,7 @@ def compute_accuracy(outputs, labels):
         0.75
     """
 
+
     n_correct = (torch.round(outputs) == labels).sum().item()
     n_total = len(outputs)
     return n_correct / n_total
@@ -93,4 +98,13 @@ def evaluate(val_loader, model, loss_fn):
 
     TODO!
     """
-    pass
+    model.eval()
+    with torch.no_grad():
+        for batch in val_loader:
+            inputs, labels = batch
+            print("inputs: " + str(inputs))
+            print("labels: " + str(labels))
+            print("labels.shape: " + str(labels.shape))
+            output = model(inputs)
+            print("output: " + str(output))
+            print("output.shape: " + str(output.shape))
