@@ -29,13 +29,12 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     )
 
     # Initalize optimizer (for gradient descent) and loss function
-    optimizer = optim.Adam(model.parameters(), lr=.001)
+    optimizer = optim.Adam(model.parameters(), lr=.001, weight_decay=.01)
     loss_fn = nn.CrossEntropyLoss()
 
     losses = []
-    total = 0
 
-    step = 0
+    step = 1
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1} of {epochs}")
 
@@ -52,9 +51,7 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
-            total += 1
 
-            step = 1
             # Periodically evaluate our model + log to Tensorboard
             if step % n_eval == 0:
                 # TODO:
@@ -72,7 +69,6 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
 
             step += 1
 
-        print(total)
         print()
 
 

@@ -16,7 +16,8 @@ class StartingNetwork(torch.nn.Module):
 
         super().__init__()
         self.fc1 = nn.Linear(dataset_size, 50)
-        self.fc2 = nn.Linear(50, 1)
+        self.fc2 = nn.Linear(50, 10)
+        self.fc3 = nn.Linear(10, 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
@@ -25,6 +26,7 @@ class StartingNetwork(torch.nn.Module):
         '''
         x = self.fc1(x.squeeze(1).float())
         x = self.fc2(x)
+        x = self.fc3(x)
         x = self.sigmoid(x)
         return x
 
