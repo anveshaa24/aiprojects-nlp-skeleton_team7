@@ -4,6 +4,7 @@ import constants
 from data.StartingDataset import StartingDataset
 from networks.StartingNetwork import StartingNetwork
 from train_functions.starting_train import starting_train
+from sklearn.model_selection import train_test_split
 
 
 def main():
@@ -17,10 +18,10 @@ def main():
     print("Batch size:", constants.BATCH_SIZE)
 
     # Initalize dataset and model. Then train the model!
-    data_path = "aiprojects-nlp-skeleton_team7/train.csv" #TODO: make sure you have train.csv downloaded in your project! this assumes it is in the project's root directory (ie the same directory as main) but you can change this as you please
+    train_path = "aiprojects-nlp-skeleton_team7/train.csv" #TODO: make sure you have train.csv downloaded in your project! this assumes it is in the project's root directory (ie the same directory as main) but you can change this as you please
 
-    train_dataset = StartingDataset(data_path)
-    val_dataset = StartingDataset(data_path)
+    train_dataset = StartingDataset(train_path)
+    val_dataset = StartingDataset(train_path)
     model = StartingNetwork(len(train_dataset.token2idx))
     starting_train(
         train_dataset=train_dataset,

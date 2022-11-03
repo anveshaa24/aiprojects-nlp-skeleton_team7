@@ -11,7 +11,7 @@ class StartingNetwork(torch.nn.Module):
         super().__init__()
         #self.fc1 = nn.Linear(12122002, 50) # What could that number mean!?!?!? Ask an officer to find out :)
         self.fc1 = nn.Linear(vocab_size, 50)
-        self.fc2 = nn.Linear(50, 1)
+        self.fc2 = nn.Linear(50, 10)
         self.fc3 = nn.Linear(10, 1)
         self.sigmoid = nn.Sigmoid()
         print("Vocab size: " + str(vocab_size))
